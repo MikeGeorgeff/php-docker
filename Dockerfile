@@ -41,7 +41,8 @@ RUN apt-get install -y php7.2-cli \
 					   php7.2-bcmath \
 					   php7.2-memcached \
 					   php7.2-gd \
-					   php7.2-dev
+					   php7.2-dev \
+					   php7.2-redis
 
 RUN apt-get clean
 
