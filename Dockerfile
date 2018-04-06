@@ -11,7 +11,11 @@ ENV LC_CTYPE=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV TERM xterm
 
+# Avoid ERROR: invoke-rc.d: policy-rc.d denied execution of start.
+RUN sed -i "s/^exit 101$/exit 0/" /usr/sbin/policy-rc.d
+
 RUN apt-get install -y software-properties-common && add-apt-repository -y ppa:ondrej/php
+
 RUN apt-get update
 
 RUN apt-get install -y pkg-config \
