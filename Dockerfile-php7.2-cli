@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM php:7.2-alpine
 
 MAINTAINER Mike Georgeff <mike.georgeff@uscca.com>
 
@@ -6,43 +6,15 @@ RUN addgroup -g 1000 -S delta && \
 	adduser -u 1000 -h /home/delta -S -G delta delta && \
 	chown -R delta:delta /home/delta
 
-ADD https://php.codecasts.rocks/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
-
-RUN echo "@php https://php.codecasts.rocks/v3.7/php-7.2" >> /etc/apk/repositories && \
-    apk add --update ca-certificates \
-					 wget \
-					 curl \
+RUN apk add --update wget \
 					 git \
-					 bash \
 					 nano \
-					 libressl \
-					 libedit-dev \
-					 libressl-dev \
-					 libxml2-dev \
-					 sqlite-dev \
-					 supervisor	\
-					 php@php \
-					 php-common@php \
-					 php-bcmath@php \
-					 php-ctype@php \
-					 php-curl@php \
-					 php-dom@php \
-					 php-json@php \
-					 php-mbstring@php \
-					 php-opcache@php \
-					 php-openssl@php \
-					 php-pcntl@php \
-					 php-pdo@php \
-					 php-pdo_mysql@php \
-					 php-pdo_sqlite@php \
-					 php-phar@php \
-					 php-redis@php \
-					 php-soap@php \
-					 php-xml@php \
-					 php-zip@php 
+					 supervisor && \
+					 rm /var/cache/apk/* && \
+					 touch /etc/supervisord.conf
 
-RUN mkdir -p /var/cache/apk && ln -s /var/cache/apk /etc/apk/cache && touch /etc/supervisord.conf
-
-COPY php.ini /etc/php7/php.ini					  
+COPY php.ini /usr/local/etc/php/php.ini					 
+		
+WORKDIR /home/delta								  
 
 CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
